@@ -5,9 +5,14 @@ export default function App() {
 
   useEffect(() => {
     fetch("/api/health")
-      .then((res) => res.json())
+      .then(async (res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+        return res.json();
+      })
       .then((data) => setHealth(`API: ${data.status}`))
-      .catch(() => setHealth("API: unavailable"));
+      .catch((err) => setHealth(`API: unavailable (${err.message})`));
   }, []);
 
   return (
