@@ -1,35 +1,35 @@
 {
-    "name":  "company-secretariat-solution",
-    "version":  "0.1.0",
-    "private":  true,
-    "scripts":  {
-                    "postinstall":  "prisma generate",
-                    "dev":  "next dev",
-                    "build":  "next build",
-                    "start":  "next start",
-                    "lint":  "next lint",
-                    "prisma:generate":  "prisma generate",
-                    "prisma:migrate":  "prisma migrate dev",
-                    "prisma:seed":  "prisma db seed"
-                },
-    "dependencies":  {
-                         "@prisma/client":  "^6.0.1",
-                         "bcryptjs":  "^3.0.3",
-                         "next":  "^16.1.6",
-                         "react":  "^19.2.4",
-                         "react-dom":  "^19.2.4"
-                     },
-    "devDependencies":  {
-                            "@types/bcryptjs":  "^2.4.6",
-                            "@types/node":  "^25.2.0",
-                            "@types/react":  "^19.2.10",
-                            "@types/react-dom":  "^19.2.3",
-                            "eslint":  "^9.39.2",
-                            "eslint-config-next":  "^16.1.6",
-                            "prisma":  "^6.0.1",
-                            "typescript":  "^5.9.3"
-                        },
-    "prisma":  {
-                   "seed":  "node prisma/seed.js"
-               }
+  "name": "company-secretariat-backend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "postinstall": "prisma generate",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:seed": "prisma db seed"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.0.1",
+    "bcryptjs": "^3.0.3",
+    "next": "^16.1.6",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^25.2.0",
+    "@types/react": "^19.2.10",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.39.2",
+    "eslint-config-next": "^16.1.6",
+    "prisma": "^6.0.1",
+    "typescript": "^5.9.3"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  }
 }
