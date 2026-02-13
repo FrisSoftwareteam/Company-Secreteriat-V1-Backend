@@ -23,7 +23,10 @@ export function OverallPercentageField() {
         .map((name) => form.querySelector<HTMLInputElement>(`input[type="radio"][name="${name}"]:checked`))
         .filter((input): input is HTMLInputElement => Boolean(input));
 
-      const earnedPoints = checkedInputs.reduce((sum, input) => sum + Number(input.value || 0), 0);
+      const earnedPoints = checkedInputs.reduce((sum, input) => {
+        const score = Number(input.getAttribute("data-score") || 0);
+        return sum + score;
+      }, 0);
       const maxPoints = totalQuestions * 5;
 
       setAnsweredCount(checkedInputs.length);

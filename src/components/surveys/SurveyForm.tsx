@@ -8,9 +8,35 @@ function shouldNumberQuestion(question: SurveyQuestion) {
 }
 
 function isFivePointNumericQuestion(question: SurveyQuestion) {
+  if (question.type === "likert_agree") return true;
   if (question.type === "rating_5") return true;
   if (!question.options || question.options.length !== 5) return false;
   return question.options.join(",") === "1,2,3,4,5";
+}
+
+function getOptionScore(question: SurveyQuestion, option: string) {
+  if (question.type === "likert_agree") {
+    const likertScores: Record<string, number> = {
+      "Strongly Agree": 5,
+      Agree: 4,
+      Neutral: 3,
+      Disagree: 2,
+      "Strongly Disagree": 1,
+    };
+    return likertScores[option];
+  }
+
+  if (question.type === "rating_5") {
+    const numeric = Number(option);
+    return Number.isFinite(numeric) ? numeric : undefined;
+  }
+
+  if (question.options?.length === 5 && question.options.join(",") === "1,2,3,4,5") {
+    const numeric = Number(option);
+    return Number.isFinite(numeric) ? numeric : undefined;
+  }
+
+  return undefined;
 }
 
 function renderQuestion(question: SurveyQuestion, questionNumber?: number) {
@@ -105,18 +131,22 @@ function renderQuestion(question: SurveyQuestion, questionNumber?: number) {
         {requiredMark}
       </label>
       <div className={groupClass}>
-        {options.map((option) => (
-          <label key={option} className="option-pill">
-            <input
-              type="radio"
-              name={name}
-              value={option}
-              required={question.required}
-              data-scoreable={isFivePointNumericQuestion(question) ? "true" : undefined}
-            />
-            <span>{option}</span>
-          </label>
-        ))}
+        {options.map((option) => {
+          const score = getOptionScore(question, option);
+          return (
+            <label key={option} className="option-pill">
+              <input
+                type="radio"
+                name={name}
+                value={option}
+                required={question.required}
+                data-scoreable={isFivePointNumericQuestion(question) ? "true" : undefined}
+                data-score={score !== undefined ? String(score) : undefined}
+              />
+              <span>{option}</span>
+            </label>
+          );
+        })}
       </div>
     </div>
   );
