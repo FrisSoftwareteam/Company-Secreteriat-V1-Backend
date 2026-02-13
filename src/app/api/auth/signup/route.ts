@@ -2,16 +2,20 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { createSession, hashPassword, setSessionCookie } from "@/lib/auth";
 
-function resolveAllowedOrigin() {
-  const raw = process.env.FRONTEND_ORIGIN?.trim();
-  if (!raw) return null;
-  return raw.replace(/\/$/, "");
+function resolveAllowedOrigins() {
+  const defaults = ["https://company-secreteriat-v1-frontend.vercel.app"];
+  const raw = process.env.FRONTEND_ORIGIN?.trim() || "";
+  const envOrigins = raw
+    .split(",")
+    .map((origin) => origin.trim().replace(/\/$/, ""))
+    .filter(Boolean);
+  return new Set([...defaults, ...envOrigins]);
 }
 
 function corsHeaders(request: NextRequest) {
-  const allowedOrigin = resolveAllowedOrigin();
+  const allowedOrigins = resolveAllowedOrigins();
   const requestOrigin = request.headers.get("origin")?.replace(/\/$/, "");
-  const origin = allowedOrigin && requestOrigin === allowedOrigin ? requestOrigin : null;
+  const origin = requestOrigin && allowedOrigins.has(requestOrigin) ? requestOrigin : null;
 
   const headers: Record<string, string> = {
     "Access-Control-Allow-Methods": "POST, OPTIONS",
