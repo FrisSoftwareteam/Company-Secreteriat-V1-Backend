@@ -1,41 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { createSession, hashPassword, setSessionCookie } from "@/lib/auth";
-
-function resolveAllowedOrigins() {
-  const defaults = ["https://company-secreteriat-v1-frontend.vercel.app"];
-  const raw = process.env.FRONTEND_ORIGIN?.trim() || "";
-  const envOrigins = raw
-    .split(",")
-    .map((origin) => origin.trim().replace(/\/$/, ""))
-    .filter(Boolean);
-  return new Set([...defaults, ...envOrigins]);
-}
-
-function corsHeaders(request: NextRequest) {
-  const allowedOrigins = resolveAllowedOrigins();
-  const requestOrigin = request.headers.get("origin")?.replace(/\/$/, "");
-  const origin = requestOrigin && allowedOrigins.has(requestOrigin) ? requestOrigin : null;
-
-  const headers: Record<string, string> = {
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-  };
-
-  if (origin) {
-    headers["Access-Control-Allow-Origin"] = origin;
-    headers["Vary"] = "Origin";
-  }
-
-  return headers;
-}
+import { getCorsHeaders } from "@/lib/api-cors";
 
 export async function OPTIONS(request: NextRequest) {
-  return new NextResponse(null, { status: 204, headers: corsHeaders(request) });
+  return new NextResponse(null, { status: 204, headers: getCorsHeaders(request, "POST, OPTIONS") });
 }
 
 export async function POST(request: NextRequest) {
-  const headers = corsHeaders(request);
+  const headers = getCorsHeaders(request, "POST, OPTIONS");
 
   try {
     const body = await request.json();
